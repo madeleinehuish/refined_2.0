@@ -1,0 +1,66 @@
+{
+  "name": "refined",
+  "version": "2.0.0",
+  "description": "This is an updated version of Rachelle Rathbone and Madeleine Huish's Q3 Galvanize Project",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "brunch build --production; knex migrate:latest",
+    "knex": "knex",
+    "start": "brunch watch --server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nf": "nf start",
+    "deploy": "rm -rf public; brunch build --production; surge public",
+    "nodemon": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madeleinehuish/refined_2.0.git"
+  },
+  "author": "Madeleine Huish <madeleinehuish@gmail.com> & Rachelle Rathbone <rachellerathbone@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madeleinehuish/refined_2.0/issues"
+  },
+  "homepage": "https://github.com/madeleinehuish/refined_2.0#readme",
+  "dependencies": {
+    "auto-reload-brunch": "^2.7.1",
+    "axios": "^0.16.1",
+    "babel-brunch": "^6.0.6",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "bcrypt-as-promised": "^1.1.0",
+    "body-parser": "^1.15.2",
+    "boom": "^4.2.0",
+    "brunch": "^2.8.2",
+    "clean-css-brunch": "^2.0.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.1",
+    "dotenv": "^2.0.0",
+    "errorlogger": "^1.0.1",
+    "expect": "^1.20.2",
+    "express": "4.14.0",
+    "humps": "^2.0.0",
+    "javascript-brunch": "^2.0.0",
+    "jsonwebtoken": "^7.1.9",
+    "knex": "^0.12.6",
+    "lodash": "^4.17.2",
+    "morgan": "^1.7.0",
+    "normalize.css": "^4.2.0",
+    "pg": "^6.1.0",
+    "postcss-brunch": "^2.0.1",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "request": "^2.79.0",
+    "stripe": "^4.14.0",
+    "uglify-js-brunch": "^2.0.1"
+  },
+  "devDependencies": {
+    "foreman": "^2.0.0",
+    "surge": "^0.18.0"
+  },
+  "engines": {
+    "node": "7.7.3"
+  }
+}
