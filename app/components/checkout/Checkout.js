@@ -1,12 +1,10 @@
 import { Link } from 'react-router';
 import React from 'react';
 
-const Checkout = React.createClass({
+const Checkout = () => {
   // formUpdate () {
   //   this.props.onFormChange()
   // },
-
-  render() {
     return (
       <section id="checkout">
         <div className="row">
@@ -24,7 +22,6 @@ const Checkout = React.createClass({
         </div>
       </section>
     )
-  }
-});
+};
 
 export default Checkout;

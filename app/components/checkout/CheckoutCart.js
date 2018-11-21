@@ -3,8 +3,8 @@ import React from 'react';
 import CheckoutCartItems from './CheckoutCartItems';
 
 
-const CheckoutCart = React.createClass({
-  render() {
+const CheckoutCart = () => {
+
     const cartItems = this.props.cartItems.map((item, index) => {
       return <CheckoutCartItems
         cartItem={item}
@@ -60,7 +60,7 @@ const CheckoutCart = React.createClass({
         </div>
       </section>
     )
-  }
-});
+
+};
 
 export default CheckoutCart;

@@ -1,8 +1,8 @@
 import { Link } from 'react-router';
 import React from 'react';
 
-const CheckoutCartItems = React.createClass({
-  render() {
+const CheckoutCartItems = ()=> {
+
     return (
       <section id="checkout-cart-items">
         <div className="two columns product-thumbnail">
@@ -19,7 +19,6 @@ const CheckoutCartItems = React.createClass({
         </div>
       </section>
     )
-  }
-});
+};
 
 export default CheckoutCartItems;

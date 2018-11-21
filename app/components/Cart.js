@@ -2,8 +2,6 @@ import { Link } from 'react-router';
 import React from 'react';
 import CartItems from './CartItems';
 
-
-
 const Cart = (props) => {
 
   const cartItems = props.cartItems.map((item, index) => {

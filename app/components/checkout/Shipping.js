@@ -1,18 +1,19 @@
 import Checkout from './Checkout';
 import CheckoutCart from './CheckoutCart';
 import { Link } from 'react-router';
-import React from 'react';
+import { React, Component } from 'react';
 
-const Shipping = React.createClass({
+class Shipping extends Component {
+
   handleClick() {
     this.props.handleAddToCart(this.props.product);
-  },
+  }
 
   addShipping(event) {
     const shipping = event.target.value;
 
     this.props.selectShipping(shipping);
-  },
+  }
 
   render() {
     return (
@@ -97,6 +98,6 @@ const Shipping = React.createClass({
       </section>
     );
   }
-});
+};
 
 export default Shipping;

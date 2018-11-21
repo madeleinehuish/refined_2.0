@@ -1,21 +1,20 @@
 import { Link } from 'react-router';
-import React from 'react';
+import { React, Component } from 'react';
 import Checkout from './Checkout';
 import CheckoutCart from './CheckoutCart';
 // import Success from './Success';
 
-const Payment = React.createClass({
+class Payment extends Component {
 
 
   setTaxRate(event) {
     this.props.setTaxRate(event.target.value);
-  },
+  }
 
   handleClick() {
     this.props.onSubmitOrder();
     this.props.clearCart();
-  },
-
+  }
 
   render() {
     return (
@@ -128,6 +127,6 @@ const Payment = React.createClass({
       </section>
     )
   }
-});
+};
 
 export default Payment;

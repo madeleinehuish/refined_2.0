@@ -1,6 +1,7 @@
-import React from 'react';
+import { React, Component } from 'react';
 
-const Success = React.createClass({
+class Success extends Component {
+
   render() {
     return (
       <section id="success">
@@ -17,6 +18,6 @@ const Success = React.createClass({
       </section>
     );
   }
-});
+};
 
 export default Success;

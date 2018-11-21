@@ -1,6 +1,6 @@
 'use strict';
 
-const bcrypt = require('bcrypt-as-promised');
+const bcrypt = require('bcrypt-nodejs');
 const boom = require('boom');
 const express = require('express');
 const jwt = require('jsonwebtoken');

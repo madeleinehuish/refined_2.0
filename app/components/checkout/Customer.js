@@ -1,23 +1,23 @@
 import { Link } from 'react-router';
-import React from 'react';
+import { React, Component } from 'react';
 import Checkout from './Checkout';
 import CheckoutCart from './CheckoutCart';
 import Payment from './Payment';
 import Shipping from './Shipping';
 // import FormIncomplete from './FormIncomplete';
 
-const Customer = React.createClass({
+class Customer extends Component {
   logOut() {
     this.props.logOut();
-  },
+  }
 
   setTaxRate(event) {
     this.props.setTaxRate(event.target.value);
-  },
+  }
 
   formUpdate () {
     this.props.onFormChange()
-  },
+  }
 
   render() {
     return (
@@ -193,6 +193,6 @@ const Customer = React.createClass({
       </section>
     )
   }
-});
+};
 
 export default Customer;
