@@ -89,7 +89,7 @@ router.post('/api-token', (req, res, next) => {
         expires: expiry,
         secure: router.get('env') === 'production'
       });
-
+      console.log('made it past cookie');
       res.send(user);
     })
     .catch(bcrypt.MISMATCH_ERROR, () => {

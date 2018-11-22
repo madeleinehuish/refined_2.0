@@ -275,15 +275,19 @@ class App extends Component {
 
     axios.post('/api-users', { firstName, lastName, email, password })
       .then((response) => {
-        axios.post('/api-token', { email, password })
-          .then((res) => {
-            console.log('inside app.js onSubmit axios res : ', res);
-            sessionStorage.setItem('userId', res.data.id);
-            this.setState({ loggedIn : true, currentUser: res.data });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        console.log('returned from server after creating user, now back in client. response: ', response);
+        sessionStorage.setItem('userId', response.data.id);
+        this.setState({ loggedIn: true, currentUser: response.data });
+
+        // axios.post('/api-token', { email, password })
+        //   .then((res) => {
+        //     console.log('inside app.js onSubmit axios res : ', res);
+        //     sessionStorage.setItem('userId', res.data.id);
+        //     this.setState({ loggedIn : true, currentUser: res.data });
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error);
+        //   });
       })
       .catch(function (error) {
         console.log(error);

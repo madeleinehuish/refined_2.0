@@ -1,6 +1,6 @@
 'use strict';
 
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const boom = require('boom');
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -36,6 +36,20 @@ router.get('/api-users', authorize, (req, res, next) => {
     });
 });
 
+// async function createHash(password) {
+//
+//     const hashedPassword = await bcrypt.hash(password, 12, (err, hash) => {
+//       if(err) {
+//         return ('hash error: ', err);
+//       }
+//       console.log('hash inside of bcrypt callback: ', hash);
+//       return hash;
+//
+//     });
+//
+//     return hashedPassword;
+// }
+
 router.post('/api-users', (req, res, next) => {
   const { email, password } = req.body;
 
@@ -50,18 +64,33 @@ router.post('/api-users', (req, res, next) => {
   }
 
   knex('users')
-    .select(knex.raw('1=1'))
+    // .select(knex.raw('1=1'))
     .where('email', email)
     .first()
     .then((exists) => {
+      console.log('exists: ', exists);
+      console.log('email: ', email, ' password: ', password);
       console.log('made it into knex post new user');
       if (exists) {
         throw boom.create(400, 'Email already exists');
       }
 
-      return bcrypt.hash(password, 12);
+      return new Promise((resolve, reject) => {
+        // const hashedPassword = createHash(password);
+        bcrypt.hash(password, 12, (err, hash) => {
+          if(err) {
+            reject('hash error: ', err);
+          }
+          console.log('hash inside of bcrypt callback: ', hash);
+          resolve(hash) ;
+        });
+
+      })
+
     })
     .then((hashedPassword) => {
+      console.log('made it into hashedpassword');
+      console.log('hashedPassword: ', hashedPassword);
       const { firstName, lastName } = req.body;
       const insertUser = { firstName, lastName, email, hashedPassword };
 
@@ -69,7 +98,11 @@ router.post('/api-users', (req, res, next) => {
         .insert(decamelizeKeys(insertUser), '*');
     })
     .then((rows) => {
+      console.log('made it into third then statement.');
+      console.log('rows[0]: ', rows[0]);
       const user = camelizeKeys(rows[0]);
+      console.log('user: ', user);
+      console.log('hashedPassword in third then: ', user.hashedPassword);
 
       delete user.hashedPassword;
       const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3); // 3 hours
@@ -77,10 +110,13 @@ router.post('/api-users', (req, res, next) => {
         expiresIn: '3h'
       });
 
+      console.log('token: ', token);
+
       res.cookie('accessToken', token, {
         httpOnly: true,
-        expires: expiry,
-        secure: router.get('env') === 'production'
+        expires: expiry
+        // ,
+        // secure: router.get('env') === 'production'
       });
       res.send(user);
     })
@@ -88,6 +124,7 @@ router.post('/api-users', (req, res, next) => {
       next(err);
     });
 });
+
 router.patch('/api-users/:id', (req, res, next) => {
   const id = Number.parseInt(req.params.id);
 
