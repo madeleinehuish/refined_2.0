@@ -255,6 +255,8 @@ class App extends Component {
     const email = this.state.signupEmail;
     const password = this.state.signupPassword;
 
+    console.log('onSubmit function: first name: ', this.state.signupFirstName, ' last name: ',this.state.signupLastName);
+
     if (!firstName) {
       alert('First name must not be blank');
     }
@@ -275,6 +277,7 @@ class App extends Component {
       .then((response) => {
         axios.post('/api-token', { email, password })
           .then((res) => {
+            console.log('inside app.js onSubmit axios res : ', res);
             sessionStorage.setItem('userId', res.data.id);
             this.setState({ loggedIn : true, currentUser: res.data });
           })

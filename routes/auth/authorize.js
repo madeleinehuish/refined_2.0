@@ -1,4 +1,4 @@
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 
 
 const authorize = function(req, res, next) {
@@ -14,3 +14,5 @@ const authorize = function(req, res, next) {
     next();
   });
 };
+
+module.exports = authorize;

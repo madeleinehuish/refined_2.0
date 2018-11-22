@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const boom = require('boom');
 const express = require('express');
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 
@@ -54,6 +54,7 @@ router.post('/api-users', (req, res, next) => {
     .where('email', email)
     .first()
     .then((exists) => {
+      console.log('made it into knex post new user');
       if (exists) {
         throw boom.create(400, 'Email already exists');
       }

@@ -3,14 +3,17 @@
 const bcrypt = require('bcrypt-nodejs');
 const boom = require('boom');
 const express = require('express');
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const knex = require('../knex');
 const { camelizeKeys } = require('humps');
+// const bodyParser = require('body-parser');
 
 // const postmark = require('postmark');
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
+
+// router.use(bodyParser.json());
 
 router.get('/api-token', (req, res) => {
   const token = req.cookies.token;
@@ -27,6 +30,12 @@ router.get('/api-token', (req, res) => {
 
 router.post('/api-token', (req, res, next) => {
   const { email, password } = req.body;
+  // console.log('req in api-token: ', req);
+  console.log('req.body in api-token: ',req.body);
+
+  // if(err) {
+  //   console.log('err: ', err);
+  // }
 
   if (!email || !email.trim()) {
     return next(boom.create(400, 'Email must not be blank'));
@@ -41,7 +50,7 @@ router.post('/api-token', (req, res, next) => {
   // const client = new postmark.Client('b2a5c213-b95c-417f-bf81-11e9525f603f');
 
   // eslint-disable-next-line max-len
-  // const message = 'Bwa ha ha ha ha ha ha ha ha ha. CH ch ch ah ah ah. Ee ee ee ee.';
+  // const message = 'test';
 
   // client.sendEmail({
   //   'From': 'screamqueen@kenmcgrady.com',
@@ -52,6 +61,11 @@ router.post('/api-token', (req, res, next) => {
 
   knex('users')
     .where('email', email)
+    // .then(res => {
+    //   console.log('made it after where...*****************');
+    //   console.log('email: ', email);
+    //   return res;
+    // })
     .first()
     .then((row) => {
       if (!row) {
@@ -59,7 +73,7 @@ router.post('/api-token', (req, res, next) => {
       }
 
       user = camelizeKeys(row);
-
+      console.log('made it into first then...**********************');
       return bcrypt.compare(password, user.hashedPassword);
     })
     .then(() => {
@@ -79,7 +93,7 @@ router.post('/api-token', (req, res, next) => {
       res.send(user);
     })
     .catch(bcrypt.MISMATCH_ERROR, () => {
-      throw boom.create(400, 'Bad email or password');
+      throw boom.create(400, 'Bad email or password, mismatch error');
     })
     .catch((err) => {
       next(err);

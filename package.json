@@ -41,6 +41,7 @@
     "express": "^4.16.4",
     "humps": "^2.0.1",
     "javascript-brunch": "^2.0.0",
+    "jsonwebtoken": "^8.4.0",
     "jwt-simple": "^0.5.5",
     "knex": "^0.15.2",
     "lodash": "^4.17.11",

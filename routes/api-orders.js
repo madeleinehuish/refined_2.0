@@ -2,28 +2,28 @@
 const boom = require('boom');
 const express = require('express');
 const knex = require('../knex');
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const stripe = require('stripe')('sk_test_j3BQvcEqnflAiAGckPRd11gN');
 const { camelizeKeys, decamelizeKeys } = require('humps');
-// const authorize = require('./auth/authorize')
+const authorize = require('./auth/authorize')
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
-const authorize = function(req, res, next) {
-  const token = req.cookies.token;
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return next(boom.create(401, 'Unauthorized'));
-    }
-
-    req.token = decoded;
-
-    next();
-  });
-};
+// const authorize = function(req, res, next) {
+//   const token = req.cookies.token;
+//
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//     if (err) {
+//       return next(boom.create(401, 'Unauthorized'));
+//     }
+//
+//     req.token = decoded;
+//
+//     next();
+//   });
+// };
 
 router.get('/api-orders', authorize, (_req, res, next) => {
   knex('orders')
