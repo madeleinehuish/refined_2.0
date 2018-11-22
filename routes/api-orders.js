@@ -2,10 +2,11 @@
 const boom = require('boom');
 const express = require('express');
 const knex = require('../knex');
-const jwt = require('jsonwebtoken');
+const jwt = require('jwt-simple');
 const _ = require('lodash');
 const stripe = require('stripe')('sk_test_j3BQvcEqnflAiAGckPRd11gN');
 const { camelizeKeys, decamelizeKeys } = require('humps');
+// const authorize = require('./auth/authorize')
 
 // eslint-disable-next-line new-cap
 const router = express.Router();

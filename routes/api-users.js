@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const boom = require('boom');
 const express = require('express');
-const jwt = require('jsonwebtoken');
+const jwt = require('jwt-simple');
 const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 
