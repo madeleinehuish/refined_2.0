@@ -98,6 +98,7 @@ class App extends Component {
     Stripe.setPublishableKey('pk_test_jXQn5jcYPOHMsujRjJiU85BA');
     axios.get('/api-products')
       .then(res => {
+        console.log('res.data: ', res.data);
         this.setState({ products: res.data, defaultProducts: res.data, sortArray: res.data });
       })
       .catch((error) => {
@@ -430,7 +431,7 @@ class App extends Component {
               displaySearch={this.displaySearch}
               handleSearch={this.handleSearch}
               handleSort={this.handleSort}
-              searchFilter={this.searchFilter}
+              // searchFilter={this.searchFilter}
               value={this.state.value}
               inputValue={this.state.inputValue}
             />
