@@ -34,6 +34,16 @@ switch (app.get('env')) {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// // //override res.send (useful for seeing into response)
+// app.use(function(req, res, next) {
+//     var temp = res.send
+//     res.send = function() {
+//         console.log('this: ', this);
+//         temp.apply(this,arguments);
+//     }
+//     next();
+// })
+
 const path = require('path');
 
 app.use(express.static(path.join('public')));

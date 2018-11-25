@@ -186,8 +186,11 @@ class App extends Component {
   }
 
   logIn(user) {
+
     const email = this.state.signupEmail;
     const password = this.state.signupPassword;
+
+    console.log('inside login: email: ', email, ' password: ',password);
 
     if (!email) {
       alert('Email must not be blank');
@@ -198,9 +201,11 @@ class App extends Component {
 
     axios.post('/api-token', { email, password })
       .then((res) => {
+        console.log('login. made it back to client after api-token axios post. res.data: ', res.data);
         sessionStorage.setItem('userId', res.data.id);
         this.setState({ loggedIn : true, currentUser: res.data });
       })
+      // //uncomment this after I get through
       .then(() => {
         axios.get(`/api-orders/${this.state.currentUser.id}`)
           .then((res) => {
@@ -276,6 +281,8 @@ class App extends Component {
     axios.post('/api-users', { firstName, lastName, email, password })
       .then((response) => {
         console.log('returned from server after creating user, now back in client. response: ', response);
+
+        //replaced commented out stuff below with this
         sessionStorage.setItem('userId', response.data.id);
         this.setState({ loggedIn: true, currentUser: response.data });
 

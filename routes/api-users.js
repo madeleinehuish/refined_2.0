@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const boom = require('boom');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const jwt_s = require('jwt-simple');
 const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 
@@ -21,6 +22,12 @@ const authorize = function(req, res, next) {
     next();
   });
 };
+
+function tokenForUser(user) {
+	const timestamp = new Date().getTime();
+	console.log('user: ', user);
+	return jwt_s.encode({ sub: user.id, iat: timestamp }, process.env.JWT_SECRET);
+}
 
 router.get('/api-users', authorize, (req, res, next) => {
   knex('users')
@@ -105,20 +112,23 @@ router.post('/api-users', (req, res, next) => {
       console.log('hashedPassword in third then: ', user.hashedPassword);
 
       delete user.hashedPassword;
-      const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3); // 3 hours
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '3h'
-      });
+      // const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3); // 3 hours
+      // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { //***
+      //   expiresIn: '3h'
+      // });
 
-      console.log('token: ', token);
-
-      res.cookie('accessToken', token, {
-        httpOnly: true,
-        expires: expiry
-        // ,
-        // secure: router.get('env') === 'production'
-      });
+      // console.log('token: ', token);
+      //
+      // res.cookie('accessToken', token, {
+      //   httpOnly: true,
+      //   expires: expiry
+      //   // ,
+      //   // secure: router.get('env') === 'production'
+      // });
+      // res.send(user);  //***
+      user.token = tokenForUser(user)
       res.send(user);
+
     })
     .catch((err) => {
       next(err);

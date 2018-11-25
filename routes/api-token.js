@@ -1,9 +1,10 @@
 'use strict';
 
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const boom = require('boom');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const jwt_s = require('jwt-simple');
 const knex = require('../knex');
 const { camelizeKeys } = require('humps');
 // const bodyParser = require('body-parser');
@@ -12,6 +13,12 @@ const { camelizeKeys } = require('humps');
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
+
+function tokenForUser(user) {
+	const timestamp = new Date().getTime();
+	console.log('user: ', user);
+	return jwt_s.encode({ sub: user.id, iat: timestamp }, process.env.JWT_SECRET);
+}
 
 // router.use(bodyParser.json());
 
@@ -30,12 +37,7 @@ router.get('/api-token', (req, res) => {
 
 router.post('/api-token', (req, res, next) => {
   const { email, password } = req.body;
-  // console.log('req in api-token: ', req);
   console.log('req.body in api-token: ',req.body);
-
-  // if(err) {
-  //   console.log('err: ', err);
-  // }
 
   if (!email || !email.trim()) {
     return next(boom.create(400, 'Email must not be blank'));
@@ -47,25 +49,8 @@ router.post('/api-token', (req, res, next) => {
 
   let user;
 
-  // const client = new postmark.Client('b2a5c213-b95c-417f-bf81-11e9525f603f');
-
-  // eslint-disable-next-line max-len
-  // const message = 'test';
-
-  // client.sendEmail({
-  //   'From': 'screamqueen@kenmcgrady.com',
-  //   'To': email,
-  //   'Subject': 'Boo! Welcome to Scream Queen!',
-  //   'TextBody': message
-  // });
-
   knex('users')
     .where('email', email)
-    // .then(res => {
-    //   console.log('made it after where...*****************');
-    //   console.log('email: ', email);
-    //   return res;
-    // })
     .first()
     .then((row) => {
       if (!row) {
@@ -74,28 +59,50 @@ router.post('/api-token', (req, res, next) => {
 
       user = camelizeKeys(row);
       console.log('made it into first then...**********************');
-      return bcrypt.compare(password, user.hashedPassword);
+      console.log('user: ', user);
+
+      return bcrypt.compare(password, user.hashedPassword, (err, res) => {
+        console.log('inside of bcrypt compare function. res: ', res);
+        if(err) {
+          console.log('bcrypt compare async function error: ', err);
+        }
+        return res
+      });
+
     })
     .then(() => {
+      console.log('made it into next then');
+      // if(!match) res.send('bad email or password');
+
       delete user.hashedPassword;
 
       const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3); // 3 hours
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '3h'
+      // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      //   expiresIn: '3h'
+      // });
+
+      // console.log('token: ', token);
+      // console.log('res keys: ', Object.keys(res));
+      // console.log('res.req.headers.cookie: ', res.req.headers.cookie);
+      // if(!res.req.headers.cookie) {
+
+			const token = tokenForUser(user);
+			res.cookie('accessToken', token, {
+        httpOnly: true,
+        expires: expiry
+        // ,
+        // secure: router.get('env') === 'production'
       });
 
-      res.cookie('token', token, {
-        httpOnly: true,
-        expires: expiry,
-        secure: router.get('env') === 'production'
-      });
-      console.log('made it past cookie');
+			// user.token = tokenForUser(user)
+			console.log('user to send: ', user);
       res.send(user);
+
+      // res.send(user);
     })
-    .catch(bcrypt.MISMATCH_ERROR, () => {
-      throw boom.create(400, 'Bad email or password, mismatch error');
-    })
+
     .catch((err) => {
+      console.log('made it into catch statement');
       next(err);
     });
 });
